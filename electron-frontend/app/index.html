@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+
+	<canvas id="myCanvas">
+	Your browser does not support the HTML5 canvas tag.
+	</canvas>
+
+	<div class="actions">
+
+		<div class="button-container">
+			<button class="button" id="erase" onclick=colorChange("#FFFFFF")>Erase</button>
+			<button class="swatch black" onclick=colorChange("#000000")></button>
+			<button class="swatch green" onclick=colorChange("#007F00")></button>
+			<button class="swatch red" onclick=colorChange("#FF0000")></button>
+		</div>
+		<div class="button-container">
+			<button onclick=sizeChange(2)>▲</button>
+			<button onclick=sizeChange(-2)>▼</button>
+		</div>
+	</div>
+
+<script src=index.js></script>
+</body>
+</html>
