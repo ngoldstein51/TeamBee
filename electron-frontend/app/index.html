@@ -4,23 +4,35 @@
 	<link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-
 	<canvas id="myCanvas">
 	Your browser does not support the HTML5 canvas tag.
 	</canvas>
-
 	<div class="actions">
 
 		<div class="button-container">
-			<button class="button" id="erase" onclick=colorChange("#FFFFFF")>Erase</button>
+			<button id="undo" onclick=undo()>Undo</button>
+			<button class="redo" onclick=redo()>Redo</button>
+			<button class="clear" onclick=clearScreen()>Clear</button>
+			<button class="erase" onclick=colorChange("#FFFFFF")>Erase</button>
 			<button class="swatch black" onclick=colorChange("#000000")></button>
 			<button class="swatch green" onclick=colorChange("#007F00")></button>
 			<button class="swatch red" onclick=colorChange("#FF0000")></button>
 		</div>
+		<form onsubmit="return false;">
+  			Color:<br>
+  			<input type="text" id="colorpicker" value="">
+  			<br>
+			</form> 
 		<div class="button-container">
 			<button onclick=sizeChange(2)>▲</button>
 			<button onclick=sizeChange(-2)>▼</button>
 		</div>
+		<text>Size:<span id="num"></span></text>
+
+		<div class="slidecontainer">
+  		<input type="range" min="1" max="100" value="15" class="slider" id="myRange">
+		</div>
+
 	</div>
 
 <script src=index.js></script>
