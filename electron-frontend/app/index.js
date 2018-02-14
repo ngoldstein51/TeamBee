@@ -3,7 +3,7 @@ let history=[];
 let bistory=[];
 let color="#000000";
 let down=0;
-let downTouch=0
+let downTouch=0;
 let canvas = document.getElementById('myCanvas');
 let ctx = canvas.getContext('2d');
 ctx.canvas.width = canvas.clientWidth;
@@ -18,6 +18,8 @@ document.getElementById("num").innerHTML = 15;
 //http://output.jsbin.com/ateho3/285
 
 canvas.addEventListener('mousedown', function(e) {
+	if(downTouch===0){
+	console.log("mousedown")
 	  captureCanvas(history); bistory=[];
 	  let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
       this.down = true;  
@@ -45,6 +47,8 @@ canvas.addEventListener('mousedown', function(e) {
 		this.X = e.pageX-canvasX;
 		this.Y = e.pageY-canvasY;
 	  }
+	}
+	downTouch=0;
     }, 0);
 
 	canvas.addEventListener('mousemove', function(e) {
@@ -80,6 +84,8 @@ canvas.addEventListener('mouseup', function() {
     }, 0);
 
 canvas.addEventListener('touchstart', function(e) {
+	  downTouch=1;
+	  console.log("touchstart")
 	  captureCanvas(history); bistory=[];
 	  let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
       this.down = true;  
@@ -112,6 +118,7 @@ canvas.addEventListener('touchstart', function(e) {
     }, 0);
 
 	canvas.addEventListener('touchmove', function(e) {
+		downTouch=0;
       if(this.down) {
 		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
 		let touchobj = e.changedTouches[0];
@@ -204,9 +211,13 @@ function colorChange(newCol)
 function sizeChange(i)
 {
 	size=parseInt(size);
-	if(size+i>0)
+	console.log(size);
+	if(size+i>0&&size+i<=200)
+	{
 		size=size+i;
-	document.getElementById("num").innerHTML = size;
+		document.getElementById("num").innerHTML = size;
+		document.getElementById("myRange").value = size;
+	}
 }
 
 function captureCanvas(target)

@@ -25,17 +25,17 @@
 		</div>
 		<form onsubmit="return false;">
   			Color:<br>
-  			<input type="text" id="colorpicker" size="7" maxlength="7">
+  			<input type="text" id="colorpicker" size="7" maxlength="7" value="#">
   			<br>
 			</form> 
 		<div class="button-container">
-			<button onclick=sizeChange(2)>▲</button>
-			<button onclick=sizeChange(-2)>▼</button>
+			<button onclick=sizeChange(1)>▲</button>
+			<button onclick=sizeChange(-1)>▼</button>
 		</div>
 		<text>Size:<span id="num"></span></text>
 
 		<div class="slidecontainer">
-  		<input type="range" min="1" max="100" value="15" class="slider" id="myRange">
+  		<input type="range" min="1" max="800" value="15" class="slider" id="myRange">
 		</div>
 
 		<div class="button-container">
