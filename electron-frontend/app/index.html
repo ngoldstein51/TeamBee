@@ -14,9 +14,14 @@
 			<button class="redo" onclick=redo()>Redo</button>
 			<button class="clear" onclick=clearScreen()>Clear</button>
 			<button class="erase" onclick=colorChange("transp")>Erase</button>
+		</div>
+		<div class="swatch-container">
 			<button class="swatch black" onclick=colorChange("#000000")></button>
 			<button class="swatch green" onclick=colorChange("#007F00")></button>
 			<button class="swatch red" onclick=colorChange("#FF0000")></button>
+			<button class="swatch blue" onclick=colorChange("#0000FF")></button>
+			<button class="swatch yellow" onclick=colorChange("#EFFF3F")></button>
+			<button class="swatch brown" onclick=colorChange("#5E2A00")></button>
 		</div>
 		<form onsubmit="return false;">
   			Color:<br>
@@ -33,7 +38,9 @@
   		<input type="range" min="1" max="100" value="15" class="slider" id="myRange">
 		</div>
 
+		<div class="button-container">
 		<button id="newCanv" onclick="addLayer()">New Layer</button>
+		</div>
 
 	</div>
 

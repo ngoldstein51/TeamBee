@@ -25,6 +25,11 @@ button {
     transition: all 0.2s;
 }
 
+.swatch-container button {
+    width: 25px;
+    height: 25px;
+}
+
 .swatch.active {
 	border: 2px solid white;
 }
@@ -40,20 +45,19 @@ button:hover {
 	order: -1;
 }
 
-.button-container button:first-child {
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-}
-
-.button-container button:last-child {
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-}
-
-.button-container {
-	display: flex;
+.button-container,.swatch-container {
+    display: flex;
 	flex-direction: column;
 	margin: 4px;
+}
+
+.swatch-container {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-flow: row wrap;
+    columns: 2;
+    width: 50px;
 }
 
 
@@ -65,9 +69,20 @@ button:hover {
 	background: #007F00;
 }
 
-
 .red {
 	background: red;
+}
+
+.blue {
+    background: #0000FF;
+}
+
+.yellow {
+    background: #EFFF3F;
+}
+
+.brown {
+    background: #5E2A00;
 }
 
 .erase {
