@@ -25,7 +25,13 @@ canvas.addEventListener('mousedown', function(e) {
       this.Y = e.pageY-canvasY;
       if(eraser)
       {
-		ctx.clearRect(this.X-(size/2), this.Y-(size/2), size, size);
+		//ctx.clearRect(this.X-(size/2), this.Y-(size/2), size, size);
+	  	ctx.beginPath();
+ 		ctx.arc(e.pageX-canvasX,e.pageY-canvasY, size, 0, 2 * Math.PI);
+ 		ctx.save();
+ 		ctx.clip();
+ 		ctx.clearRect(0,0,canvas.width,canvas.height);
+ 		ctx.restore();
 	  }
 	  else
 	  {
@@ -46,7 +52,13 @@ canvas.addEventListener('mousedown', function(e) {
 		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
       	if(eraser)
       {
-		ctx.clearRect(e.pageX-canvasX-(size/2), e.pageY-canvasY-(size/2), size, size);
+		//ctx.clearRect(e.pageX-canvasX-(size/2), e.pageY-canvasY-(size/2), size, size);
+	  	ctx.beginPath();
+ 		ctx.arc(e.pageX-canvasX,e.pageY-canvasY, size, 0, 2 * Math.PI);
+ 		ctx.save();
+ 		ctx.clip();
+ 		ctx.clearRect(0,0,canvas.width,canvas.height);
+ 		ctx.restore();
 	  }
 	  else
 	  {
@@ -76,7 +88,13 @@ canvas.addEventListener('touchstart', function(e) {
       this.Y = touchobj.pageY-canvasY;
       if(eraser)
       {
-		ctx.clearRect(touchobj.pageX-canvasX-(size/2), touchobj.pageY-canvasY-(size/2), size, size);
+		//ctx.clearRect(touchobj.pageX-canvasX-(size/2), touchobj.pageY-canvasY-(size/2), size, size);
+	  	ctx.beginPath();
+ 		ctx.arc(touchobj.pageX-canvasX,touchobj.pageY-canvasY, size, 0, 2 * Math.PI);
+ 		ctx.save();
+ 		ctx.clip();
+ 		ctx.clearRect(0,0,canvas.width,canvas.height);
+ 		ctx.restore();
 	  }
 	  else
 	  {
@@ -99,7 +117,13 @@ canvas.addEventListener('touchstart', function(e) {
 		let touchobj = e.changedTouches[0];
       	if(eraser)
       {
-		ctx.clearRect(touchobj.pageX-canvasX-(size/2), touchobj.pageY-canvasY-(size/2), size, size);
+		//ctx.clearRect(touchobj.pageX-canvasX-(size/2), touchobj.pageY-canvasY-(size/2), size, size);
+	  	ctx.beginPath();
+ 		ctx.arc(touchobj.pageX-canvasX,touchobj.pageY-canvasY, size, 0, 2 * Math.PI);
+ 		ctx.save();
+ 		ctx.clip();
+ 		ctx.clearRect(0,0,canvas.width,canvas.height);
+ 		ctx.restore();
 	  }
 	  else
 	  {
@@ -115,6 +139,7 @@ canvas.addEventListener('touchstart', function(e) {
 		this.Y = touchobj.pageY-canvasY;
       }
       }
+      e.preventDefault();
     }, 0);
 
 canvas.addEventListener('touchend', function() {
@@ -207,7 +232,9 @@ function resize()
 	let {height, width} = canvas.getBoundingClientRect();
 	canvas.height=height;
 	canvas.width=width;
-	undo();
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.drawImage(history.pop(),0,0);
+	
 }
 
 function redo()
