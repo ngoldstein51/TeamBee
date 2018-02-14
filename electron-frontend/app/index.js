@@ -23,9 +23,35 @@ function lerp(x1, y1, x2, y2, d)
 	};
 }
 
-canvas.addEventListener('mousedown',function(event){captureCanvas(history); bistory=[]; draw(); down=1;},false);
-canvas.addEventListener('mouseup',function(event){down=0;},false);
-canvas.addEventListener('mousemove',function(event){if(down===1&&downTouch===0) draw();},false);
+// canvas.addEventListener('mousedown',function(event){captureCanvas(history); bistory=[]; draw(); down=1;},false);
+// canvas.addEventListener('mouseup',function(event){down=0;},false);
+// canvas.addEventListener('mousemove',function(event){if(down===1&&downTouch===0) draw();},false);
+
+//http://output.jsbin.com/ateho3/285
+
+canvas.addEventListener('mousedown', function(e) {
+      this.down = true;  
+      this.X = e.pageX ;
+      this.Y = e.pageY ;
+      this.color = 'white';
+    }, 0);
+
+	canvas.addEventListener('mousemove', function(e) {
+      if(this.down) {
+          ctx.beginPath();
+          ctx.moveTo(this.X, this.Y);
+          ctx.lineCap = 'round';
+           ctx.lineWidth = 3;
+          ctx.lineTo(e.pageX , e.pageY );
+          ctx.strokeStyle = this.color;
+          ctx.stroke();
+         
+         this.X = e.pageX ;
+         this.Y = e.pageY ;
+      }
+    }, 0);
+
+
 canvas.addEventListener('touchstart',function(event){
 		captureCanvas(history);
 		bistory=[];
