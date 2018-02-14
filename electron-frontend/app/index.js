@@ -15,82 +15,111 @@ let size=15;
 let eraser=0;
 document.getElementById("num").innerHTML = 15;
 
-function lerp(x1, y1, x2, y2, d)
-{
-	return {
-		x: x1 * d + x2 * (1-d),
-		y: y1 * d + y2 * (1-d),
-	};
-}
-
-// canvas.addEventListener('mousedown',function(event){captureCanvas(history); bistory=[]; draw(); down=1;},false);
-// canvas.addEventListener('mouseup',function(event){down=0;},false);
-// canvas.addEventListener('mousemove',function(event){if(down===1&&downTouch===0) draw();},false);
-
 //http://output.jsbin.com/ateho3/285
 
 canvas.addEventListener('mousedown', function(e) {
+	  captureCanvas(history); bistory=[];
+	  let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
       this.down = true;  
-      this.X = e.pageX ;
-      this.Y = e.pageY ;
-      this.color = 'white';
+      this.X = e.pageX-canvasX;
+      this.Y = e.pageY-canvasY;
+      if(eraser)
+      {
+		ctx.clearRect(this.X-(size/2), this.Y-(size/2), size, size);
+	  }
+	  else
+	  {
+	    ctx.beginPath();
+		ctx.moveTo(this.X, this.Y);
+		ctx.lineCap = 'round';
+		ctx.lineWidth = size;
+		ctx.lineTo(e.pageX-canvasX , e.pageY-canvasY );
+		ctx.strokeStyle = this.color;
+		ctx.stroke();
+		this.X = e.pageX-canvasX;
+		this.Y = e.pageY-canvasY;
+	  }
     }, 0);
 
 	canvas.addEventListener('mousemove', function(e) {
       if(this.down) {
-          ctx.beginPath();
-          ctx.moveTo(this.X, this.Y);
-          ctx.lineCap = 'round';
-           ctx.lineWidth = 3;
-          ctx.lineTo(e.pageX , e.pageY );
-          ctx.strokeStyle = this.color;
-          ctx.stroke();
-         
-         this.X = e.pageX ;
-         this.Y = e.pageY ;
+		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+      	if(eraser)
+      {
+		ctx.clearRect(e.pageX-canvasX-(size/2), e.pageY-canvasY-(size/2), size, size);
+	  }
+	  else
+	  {
+		ctx.beginPath();
+		ctx.moveTo(this.X, this.Y);
+		ctx.lineCap = 'round';
+		ctx.lineWidth = size;
+		ctx.lineTo(e.pageX-canvasX , e.pageY-canvasY );
+		ctx.strokeStyle = this.color;
+		ctx.stroke();
+		this.X = e.pageX-canvasX;
+		this.Y = e.pageY-canvasY;
+	}
       }
     }, 0);
 
+canvas.addEventListener('mouseup', function() {
+      this.down = false;      
+    }, 0);
 
-canvas.addEventListener('touchstart',function(event){
-		captureCanvas(history);
-		bistory=[];
-		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
-		let touchobj = event.changedTouches[0];
-		downTouch=1;
-		x=touchobj.clientX-canvasX;
-		y=touchobj.clientY-canvasY;
-		ctx.fillStyle = color;
-		if(eraser)
-	{
-		ctx.clearRect(x-(size/2), y-(size/2), size, size);
-	}
-	else
-	{
-	    ctx.beginPath();
-		ctx.arc(x, y, size, 0, 2 * Math.PI);
-		ctx.fill();
-	}
-	},
-	false);
-canvas.addEventListener('touchmove', function(event){
-		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
-		let touchobj = event.changedTouches[0];
-		x=touchobj.clientX-canvasX;
-		y=touchobj.clientY-canvasY;
-		ctx.fillStyle = color;
-		if(eraser)
-	{
-		ctx.clearRect(x-(size/2), y-(size/2), size, size);
-	}
-	else
-	{
+canvas.addEventListener('touchstart', function(e) {
+	  captureCanvas(history); bistory=[];
+	  let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+      this.down = true;  
+      let touchobj = e.changedTouches[0];
+      this.X = touchobj.pageX-canvasX;
+      this.Y = touchobj.pageY-canvasY;
+      if(eraser)
+      {
+		ctx.clearRect(touchobj.pageX-canvasX-(size/2), touchobj.pageY-canvasY-(size/2), size, size);
+	  }
+	  else
+	  {
 		ctx.beginPath();
-		ctx.arc(x, y, size, 0, 2 * Math.PI);
-		ctx.fill();
-	}
-		event.preventDefault();}, false);
-canvas.addEventListener('touchend', function(event){downTouch=0;},false)
+		ctx.moveTo(this.X, this.Y);
+		ctx.lineCap = 'round';
+		ctx.lineWidth = size;
+		ctx.lineTo(touchobj.pageX-canvasX , touchobj.pageY-canvasY );
+		ctx.strokeStyle = this.color;
+		ctx.stroke();
+
+		this.X = touchobj.pageX-canvasX;
+		this.Y = touchobj.pageY-canvasY;
+      }
+    }, 0);
+
+	canvas.addEventListener('touchmove', function(e) {
+      if(this.down) {
+		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+		let touchobj = e.changedTouches[0];
+      	if(eraser)
+      {
+		ctx.clearRect(touchobj.pageX-canvasX-(size/2), touchobj.pageY-canvasY-(size/2), size, size);
+	  }
+	  else
+	  {
+		ctx.beginPath();
+		ctx.moveTo(this.X, this.Y);
+		ctx.lineCap = 'round';
+		ctx.lineWidth = size;
+		ctx.lineTo(touchobj.pageX-canvasX , touchobj.pageY-canvasY );
+		ctx.strokeStyle = this.color;
+		ctx.stroke();
+
+		this.X = touchobj.pageX-canvasX;
+		this.Y = touchobj.pageY-canvasY;
+      }
+      }
+    }, 0);
+
+canvas.addEventListener('touchend', function() {
+      this.down = false;      
+    }, 0);
 
 window.addEventListener('resize', function(event){resize()},false)
 
@@ -110,23 +139,31 @@ c.oninput=function(event)
 	colorChange(c.value);
 }
 
-function draw()
-{
-	let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
-	x = event.clientX - canvasX;
-	y = event.clientY - canvasY;
-	ctx.fillStyle = color;
-	if(eraser)
-	{
-		ctx.clearRect(x-(size/2), y-(size/2), size, size);
-	}
-	else
-	{
-		ctx.beginPath();
-		ctx.arc(x, y, size, 0, 2 * Math.PI);
-		ctx.fill();
-	}
-}
+// function lerp(x1, y1, x2, y2, d)
+// {
+// 	return {
+// 		x: x1 * d + x2 * (1-d),
+// 		y: y1 * d + y2 * (1-d),
+// 	};
+// }
+
+// function draw()
+// {
+// 	let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+// 	x = event.clientX - canvasX;
+// 	y = event.clientY - canvasY;
+// 	ctx.fillStyle = color;
+// 	if(eraser)
+// 	{
+// 		ctx.clearRect(x-(size/2), y-(size/2), size, size);
+// 	}
+// 	else
+// 	{
+// 		ctx.beginPath();
+// 		ctx.arc(x, y, size, 0, 2 * Math.PI);
+// 		ctx.fill();
+// 	}
+// }
 
 function colorChange(newCol)
 {
@@ -208,3 +245,49 @@ function addLayer()
 	let newcanv=document.createElement("canvas");
 	body.appendChild(newcanv);
 }
+
+
+
+// canvas.addEventListener('mousedown',function(event){captureCanvas(history); bistory=[]; draw(); down=1;},false);
+// canvas.addEventListener('mouseup',function(event){down=0;},false);
+// canvas.addEventListener('mousemove',function(event){if(down===1&&downTouch===0) draw();},false);
+
+// canvas.addEventListener('touchstart',function(event){
+// 		captureCanvas(history);
+// 		bistory=[];
+// 		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+// 		let touchobj = event.changedTouches[0];
+// 		downTouch=1;
+// 		x=touchobj.clientX-canvasX;
+// 		y=touchobj.clientY-canvasY;
+// 		ctx.fillStyle = color;
+// 		if(eraser)
+// 	{
+// 		ctx.clearRect(x-(size/2), y-(size/2), size, size);
+// 	}
+// 	else
+// 	{
+// 	    ctx.beginPath();
+// 		ctx.arc(x, y, size, 0, 2 * Math.PI);
+// 		ctx.fill();
+// 	}
+// 	},
+// 	false);
+// canvas.addEventListener('touchmove', function(event){
+// 		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+// 		let touchobj = event.changedTouches[0];
+// 		x=touchobj.clientX-canvasX;
+// 		y=touchobj.clientY-canvasY;
+// 		ctx.fillStyle = color;
+// 		if(eraser)
+// 	{
+// 		ctx.clearRect(x-(size/2), y-(size/2), size, size);
+// 	}
+// 	else
+// 	{
+// 		ctx.beginPath();
+// 		ctx.arc(x, y, size, 0, 2 * Math.PI);
+// 		ctx.fill();
+// 	}
+// 		event.preventDefault();}, false);
+// canvas.addEventListener('touchend', function(event){downTouch=0;},false)
