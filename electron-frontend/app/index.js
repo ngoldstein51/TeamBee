@@ -34,7 +34,7 @@ canvas.addEventListener('mousedown', function(e) {
 		ctx.lineCap = 'round';
 		ctx.lineWidth = size;
 		ctx.lineTo(e.pageX-canvasX , e.pageY-canvasY );
-		ctx.strokeStyle = this.color;
+		ctx.strokeStyle = color;
 		ctx.stroke();
 		this.X = e.pageX-canvasX;
 		this.Y = e.pageY-canvasY;
@@ -55,7 +55,7 @@ canvas.addEventListener('mousedown', function(e) {
 		ctx.lineCap = 'round';
 		ctx.lineWidth = size;
 		ctx.lineTo(e.pageX-canvasX , e.pageY-canvasY );
-		ctx.strokeStyle = this.color;
+		ctx.strokeStyle = color;
 		ctx.stroke();
 		this.X = e.pageX-canvasX;
 		this.Y = e.pageY-canvasY;
@@ -85,7 +85,7 @@ canvas.addEventListener('touchstart', function(e) {
 		ctx.lineCap = 'round';
 		ctx.lineWidth = size;
 		ctx.lineTo(touchobj.pageX-canvasX , touchobj.pageY-canvasY );
-		ctx.strokeStyle = this.color;
+		ctx.strokeStyle = color;
 		ctx.stroke();
 
 		this.X = touchobj.pageX-canvasX;
@@ -108,7 +108,7 @@ canvas.addEventListener('touchstart', function(e) {
 		ctx.lineCap = 'round';
 		ctx.lineWidth = size;
 		ctx.lineTo(touchobj.pageX-canvasX , touchobj.pageY-canvasY );
-		ctx.strokeStyle = this.color;
+		ctx.strokeStyle = color;
 		ctx.stroke();
 
 		this.X = touchobj.pageX-canvasX;
