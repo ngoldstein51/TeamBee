@@ -8,7 +8,7 @@ body {
 }
 
 canvas {
-	background: #fff;
+	background: transparent;
 	flex: 1;
 	border: 1px solid black;
 }

@@ -1,3 +1,4 @@
+let body=document.getElementById("bod");
 let history=[];
 let bistory=[];
 let color="#000000";
@@ -11,6 +12,7 @@ let x;
 let y;
 let touchobj;
 let size=15;
+let eraser=0;
 document.getElementById("num").innerHTML = 15;
 
 function lerp(x1, y1, x2, y2, d)
@@ -33,9 +35,16 @@ canvas.addEventListener('touchstart',function(event){
 		x=touchobj.clientX-canvasX;
 		y=touchobj.clientY-canvasY;
 		ctx.fillStyle = color;
+		if(eraser)
+	{
+		ctx.clearRect(x-(size/2), y-(size/2), size, size);
+	}
+	else
+	{
 	    ctx.beginPath();
 		ctx.arc(x, y, size, 0, 2 * Math.PI);
 		ctx.fill();
+	}
 	},
 	false);
 canvas.addEventListener('touchmove', function(event){
@@ -44,28 +53,20 @@ canvas.addEventListener('touchmove', function(event){
 		x=touchobj.clientX-canvasX;
 		y=touchobj.clientY-canvasY;
 		ctx.fillStyle = color;
+		if(eraser)
+	{
+		ctx.clearRect(x-(size/2), y-(size/2), size, size);
+	}
+	else
+	{
 		ctx.beginPath();
 		ctx.arc(x, y, size, 0, 2 * Math.PI);
 		ctx.fill();
+	}
 		event.preventDefault();}, false);
 canvas.addEventListener('touchend', function(event){downTouch=0;},false)
 
 window.addEventListener('resize', function(event){resize()},false)
-
-window.addEventListener('keypress',event => {
-	if(event.ctrlKey&&event.code==='KeyZ')
-		undo();
-});
-
-window.addEventListener('keypress',event => {
-	if(event.ctrlKey&&event.code==='KeyY')
-		redo();
-});	
-
-window.addEventListener('keypress',event => {
-	if(event.ctrlKey&&event.code==='KeyL')
-		clearScreen();
-});
 
 let s=document.getElementById('myRange');
 
@@ -80,7 +81,7 @@ let c=document.getElementById('colorpicker');
 c.oninput=function(event)
 {
 	event.preventDefault();
-	color=c.value;
+	colorChange(c.value);
 }
 
 function draw()
@@ -89,15 +90,27 @@ function draw()
 	x = event.clientX - canvasX;
 	y = event.clientY - canvasY;
 	ctx.fillStyle = color;
-	ctx.beginPath();
-	ctx.arc(x, y, size, 0, 2 * Math.PI);
-	ctx.fill();
-	//ctx.fillRect(x-12, y-12, 10, 10);
+	if(eraser)
+	{
+		ctx.clearRect(x-(size/2), y-(size/2), size, size);
+	}
+	else
+	{
+		ctx.beginPath();
+		ctx.arc(x, y, size, 0, 2 * Math.PI);
+		ctx.fill();
+	}
 }
 
 function colorChange(newCol)
 {
-	color = newCol;
+	if(newCol==='transp')
+		eraser=1;
+	else
+	{
+		eraser=0;
+		color = newCol;
+	}
 }
 
 function sizeChange(i)
@@ -147,4 +160,25 @@ function clearScreen()
 	captureCanvas(history);
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	bistory=[];
+}
+
+document.onkeydown = function(e) {
+  if (e.ctrlKey && e.key === 'z') {
+    e.preventDefault();
+    undo();
+  }
+  else if (e.ctrlKey && e.key === 'y') {
+    e.preventDefault();
+    redo();
+  }
+  else if (e.ctrlKey && e.key === 'l') {
+    e.preventDefault();
+    clearScreen();
+  }
+}
+
+function addLayer()
+{
+	let newcanv=document.createElement("canvas");
+	body.appendChild(newcanv);
 }
