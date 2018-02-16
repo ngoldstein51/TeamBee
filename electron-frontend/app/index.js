@@ -11,6 +11,7 @@ ctx.canvas.height = canvas.clientHeight;
 let x;
 let y;
 let touchobj;
+let filling=0;
 let size=15;
 let eraser=0;
 document.getElementById("num").innerHTML = 15;
@@ -18,8 +19,31 @@ document.getElementById("num").innerHTML = 15;
 //http://output.jsbin.com/ateho3/285
 
 canvas.addEventListener('mousedown', function(e) {
-	if(downTouch===0){
-	console.log("mousedown")
+	console.log(history);
+	if(filling===1)
+	{
+		captureCanvas(history); bistory=[];
+		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+        this.down = true
+        this.X = e.pageX-canvasX;
+        this.Y = e.pageY-canvasY;
+	    let arr=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+	    let currpos=4*(Math.floor(this.X)+(canvas.width*(this.Y)));
+	    let col=color.split('');
+	    let arrcolor=[]
+
+		arrcolor.push(parseInt(""+col[1]+col[2], 16));
+		arrcolor.push(parseInt(""+col[3]+col[4], 16));
+		arrcolor.push(parseInt(""+col[5]+col[6], 16));
+		arrcolor[3]=255
+		if(""+arrcolor!==pixelConvert(arr,currpos))
+		{
+			fillBucketHelperIt(currpos,arr,pixelConvert(arr,currpos),canvas.width,canvas.height,arrcolor);
+			ctx.putImageData(new ImageData(arr,canvas.width,canvas.height),0,0);
+		}
+	}
+	else if(downTouch===0){
+	
 	  captureCanvas(history); bistory=[];
 	  let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
       this.down = true;  
@@ -49,7 +73,7 @@ canvas.addEventListener('mousedown', function(e) {
 	  }
 	}
 	downTouch=0;
-    }, 0);
+}, 0);
 
 	canvas.addEventListener('mousemove', function(e) {
       if(this.down) {
@@ -85,7 +109,7 @@ canvas.addEventListener('mouseup', function() {
 
 canvas.addEventListener('touchstart', function(e) {
 	  downTouch=1;
-	  console.log("touchstart")
+	  
 	  captureCanvas(history); bistory=[];
 	  let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
       this.down = true;  
@@ -197,6 +221,84 @@ c.oninput=function(event)
 // 	}
 // }
 
+function fillBucket()
+{
+	if(filling===0)
+		filling=1;
+	else
+		filling=0;
+}
+
+function fillBucketHelper(currpos,image,clickedcolor,w,h,colorArray)
+{
+	try
+	{
+		image[currpos]=colorArray[0];
+		image[currpos+1]=colorArray[1];
+		image[currpos+2]=colorArray[2];
+		image[currpos+3]=colorArray[3];
+
+		let topbound=0;
+		let bottombound=4*w*h;
+		let rightbound=currpos;
+		let leftbound=currpos;
+
+		while(rightbound%(w*4)!=0)
+			rightbound++;
+		while(leftbound%(w*4)!=0)
+			leftbound--;
+
+		if(currpos+4<=rightbound&&clickedcolor===pixelConvert(image,currpos+4))
+			fillBucketHelper(currpos+4,image,clickedcolor,w,h,colorArray);
+		if(currpos-4>=leftbound&&clickedcolor===pixelConvert(image,currpos-4))
+			fillBucketHelper(currpos-4,image,clickedcolor,w,h,colorArray);
+		if(currpos+(w*4)>=topbound&&clickedcolor===pixelConvert(image,currpos+(w*4)))
+			fillBucketHelper(currpos+(w*4),image,clickedcolor,w,h,colorArray);
+		if(currpos-(w*4)<=bottombound&&clickedcolor===pixelConvert(image,currpos-(w*4)))
+			fillBucketHelper(currpos-(w*4),image,clickedcolor,w,h,colorArray);
+	}
+	catch(e){}
+
+}
+
+function fillBucketHelperIt(currpos,image,clickedcolor,w,h,colorArray)
+{
+	let q=[];
+	
+	q.push(currpos);
+
+	let rows=[];
+	
+	for(let i=0;i<(h*w*4);i+=(w*4))
+		rows.push([i,i+w*4]);
+
+	while(q.length>0)
+	{
+		//console.log(q);
+		currpos=q.pop();
+
+		image[currpos]=colorArray[0];
+		image[currpos+1]=colorArray[1];
+		image[currpos+2]=colorArray[2];
+		image[currpos+3]=colorArray[3];
+
+		let topbound=0;
+		let bottombound=4*w*h;
+		let crow=rows[Math.floor(currpos/(w*4))];
+		let leftbound=crow[0];
+		let rightbound=crow[1];
+
+		if(currpos + 4 <= rightbound && clickedcolor == pixelConvert(image,currpos+4))
+			q.push(currpos+4);
+		if(currpos - 4 >= leftbound && clickedcolor == pixelConvert(image,currpos-4))
+			q.push(currpos-4);
+		if(currpos + (w*4) >= topbound && clickedcolor == pixelConvert(image,currpos+(w*4)))
+			q.push(currpos+(w*4));
+		if(currpos - (w*4) <= bottombound && clickedcolor == pixelConvert(image,currpos-(w*4)))
+			q.push(currpos-(w*4));		
+	}
+}
+
 function colorChange(newCol)
 {
 	if(newCol==='transp')
@@ -208,10 +310,19 @@ function colorChange(newCol)
 	}
 }
 
+function pixeleq(pix1, pix2)
+{
+	return (pix1[0]===pix2[0]&&pix1[1]===pix2[1]&&pix1[2]===pix2[2]&&pix1[3]===pix2[3])
+}
+
+function pixelConvert(arr,i)
+{
+	return ""+arr[i]+","+arr[i+1]+","+arr[i+2]+","+arr[i+3];
+}
+
 function sizeChange(i)
 {
 	size=parseInt(size);
-	console.log(size);
 	if(size+i>0&&size+i<=200)
 	{
 		size=size+i;
@@ -283,8 +394,6 @@ function addLayer()
 	let newcanv=document.createElement("canvas");
 	body.appendChild(newcanv);
 }
-
-
 
 // canvas.addEventListener('mousedown',function(event){captureCanvas(history); bistory=[]; draw(); down=1;},false);
 // canvas.addEventListener('mouseup',function(event){down=0;},false);
