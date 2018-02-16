@@ -13,8 +13,8 @@
 			<button id="undo" onclick=undo()>Undo</button>
 			<button class="redo" onclick=redo()>Redo</button>
 			<button class="clear" onclick=clearScreen()>Clear</button>
-			<button class="erase" onclick=colorChange("transp")>Erase</button>
-			<button class="fill" onclick=fillBucket()>fill</button>
+			<button class="erase" onclick=colorChange("transp");>Erase</button>
+			<button id="filler" class="fill" onclick=fillBucket();>Start filling</button>
 		</div>
 		<div class="swatch-container">
 			<button class="swatch black" onclick=colorChange("#000000")></button>
@@ -22,8 +22,13 @@
 			<button class="swatch red" onclick=colorChange("#FF0000")></button>
 			<button class="swatch blue" onclick=colorChange("#0000FF")></button>
 			<button class="swatch yellow" onclick=colorChange("#EFFF3F")></button>
-			<button class="swatch brown" onclick=colorChange("#5E2A00")></button>
+			<button class="swatch maroon" onclick=colorChange("#800000")></button>
 		</div>
+
+		<div class="button-container">
+			<input class="swatcher" type="color" onchange="color=value">
+		</div>
+
 		<form onsubmit="return false;">
   			Color:<br>
   			<input type="text" id="colorpicker" size="7" maxlength="7" value="#">
@@ -33,14 +38,15 @@
 			<button onclick=sizeChange(1)>▲</button>
 			<button onclick=sizeChange(-1)>▼</button>
 		</div>
-		<text>Size:<span id="num"></span></text>
+		
+		<text>Size:<span id="num">15</span></text>
 
 		<div class="slidecontainer">
-  		<input type="range" min="1" max="200" value="15" class="slider" id="myRange">
+  			<input type="range" min="1" max="200" value="15" class="slider" id="myRange">
 		</div>
 
 		<div class="button-container">
-		<button id="newCanv" onclick="addLayer()">New Layer</button>
+			<button id="newCanv" onclick="addLayer()">New Layer</button>
 		</div>
 
 	</div>
