@@ -1,2 +1,2 @@
-# TeamBee
-cs347 Team Bee repo
+# art-studio
+A simple mock up of an art studio
