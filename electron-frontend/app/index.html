@@ -10,23 +10,24 @@
 	<div class="actions">
 
 		<div class="button-container">
-			<button id="undo" onclick=undo()>Undo</button>
-			<button class="redo" onclick=redo()>Redo</button>
-			<button class="clear" onclick=clearScreen()>Clear</button>
-			<button class="erase" onclick=colorChange("transp");>Erase</button>
-			<button id="filler" class="fill" onclick=fillBucket();>Start filling</button>
+			<div id="undo" class="btn" onclick=undo()>Undo</div>
+			<div class="redo btn" onclick=redo()>Redo</div>
+			<div class="clear btn" onclick=clearScreen()>Clear</div>
+			<div class="erase btn" onclick=colorChange("transp");>Erase</div>
+			<div id="filler" class="fill btn" onclick=fillBucket();>Start filling</div>
+			<div id="eyedropper" class="btn" onclick=eyeDrop();>Eyedrop</div>
 		</div>
 		<div class="swatch-container">
-			<button class="swatch black" onclick=colorChange("#000000")></button>
-			<button class="swatch green" onclick=colorChange("#007F00")></button>
-			<button class="swatch red" onclick=colorChange("#FF0000")></button>
-			<button class="swatch blue" onclick=colorChange("#0000FF")></button>
-			<button class="swatch yellow" onclick=colorChange("#EFFF3F")></button>
-			<button class="swatch maroon" onclick=colorChange("#800000")></button>
+			<div class="swatch black btn" onclick=colorChange("#000000")></div>
+			<div class="swatch green btn" onclick=colorChange("#007F00")></div>
+			<div class="swatch red btn" onclick=colorChange("#FF0000")></div>
+			<div class="swatch blue btn" onclick=colorChange("#0000FF")></div>
+			<div class="swatch yellow btn" onclick=colorChange("#EFFF3F")></div>
+			<div class="swatch maroon btn" onclick=colorChange("#800000")></div>
 		</div>
 
 		<div class="button-container">
-			<input class="swatcher" type="color" onchange="color=value">
+			<input class="swatcher" type="color" onclick="color=value" onchange="color=value">
 		</div>
 
 		<form onsubmit="return false;">
@@ -35,8 +36,8 @@
   			<br>
 			</form> 
 		<div class="button-container">
-			<button onclick=sizeChange(1)>▲</button>
-			<button onclick=sizeChange(-1)>▼</button>
+			<div class="btn" onclick=sizeChange(1)>▲</div>
+			<div class="btn" onclick=sizeChange(-1)>▼</div>
 		</div>
 		
 		<text>Size:<span id="num">15</span></text>
@@ -46,7 +47,7 @@
 		</div>
 
 		<div class="button-container">
-			<button id="newCanv" onclick="addLayer()">New Layer</button>
+			<div class="btn" id="newCanv" onclick="addLayer()">New Layer</div>
 		</div>
 
 	</div>

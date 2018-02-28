@@ -12,13 +12,30 @@ let x;
 let y;
 let touchobj;
 let filling=0;
+let eyedrop=0;
 let size=15;
 let eraser=0;
 
 //http://output.jsbin.com/ateho3/285
 
 canvas.addEventListener('mousedown', function(e) {
-	if(filling===1&&downTouch===0)
+	if(eyedrop===1)
+	{
+		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+		this.down = true
+		this.X = e.pageX-canvasX;
+		this.Y = e.pageY-canvasY;
+		let arr=ctx.getImageData(this.X,this.Y,1,1).data;
+
+		let num1=(arr[0].toString(16)==="0")? "00":arr[0].toString(16);
+		let num2=(arr[1].toString(16)==="0")? "00":arr[1].toString(16);
+		let num3=(arr[2].toString(16)==="0")? "00":arr[2].toString(16);
+		
+		color="#"+num1+num2+num3;
+
+		eyeDrop();
+	}
+	else if(filling===1&&downTouch===0)
 	{
 		captureCanvas(history); bistory=[];
 		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
@@ -107,7 +124,24 @@ canvas.addEventListener('mouseup', function() {
 canvas.addEventListener('touchstart', function(e) {
 	downTouch=1;
 
-	if(filling===1)
+	if(eyedrop===1)
+	{
+		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+		this.down = true
+		let touchobj = e.changedTouches[0];
+		this.X = touchobj.pageX-canvasX;
+		this.Y = touchobj.pageY-canvasY;
+		let arr=ctx.getImageData(this.X,this.Y,1,1).data;
+
+		let num1=(arr[0].toString(16)==="0")? "00":arr[0].toString(16);
+		let num2=(arr[1].toString(16)==="0")? "00":arr[1].toString(16);
+		let num3=(arr[2].toString(16)==="0")? "00":arr[2].toString(16);
+		
+		color="#"+num1+num2+num3;
+
+		eyeDrop();
+	}
+	else if(filling===1)
 	{
 		captureCanvas(history); bistory=[];
 		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
@@ -164,36 +198,36 @@ canvas.addEventListener('touchstart', function(e) {
 }, 0);
 
 canvas.addEventListener('touchmove', function(e) {
-		downTouch=0;
-		if(this.down&&filling===0) 
+	downTouch=0;
+	if(this.down&&filling===0) 
+	{
+		let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
+		let touchobj = e.changedTouches[0];
+		
+		if(eraser)
 		{
-			let {left: canvasX, top: canvasY} = canvas.getBoundingClientRect();
-			let touchobj = e.changedTouches[0];
-			
-			if(eraser)
-			{
-				ctx.beginPath();
-				ctx.arc(touchobj.pageX-canvasX,touchobj.pageY-canvasY, size, 0, 2 * Math.PI);
-				ctx.save();
-				ctx.clip();
-				ctx.clearRect(0,0,canvas.width,canvas.height);
-				ctx.restore();
-			}
-			else
-			{
-				ctx.beginPath();
-				ctx.moveTo(this.X, this.Y);
-				ctx.lineCap = 'round';
-				ctx.lineWidth = size;
-				ctx.lineTo(touchobj.pageX-canvasX , touchobj.pageY-canvasY );
-				ctx.strokeStyle = color;
-				ctx.stroke();
-
-				this.X = touchobj.pageX-canvasX;
-				this.Y = touchobj.pageY-canvasY;
-			}
+			ctx.beginPath();
+			ctx.arc(touchobj.pageX-canvasX,touchobj.pageY-canvasY, size, 0, 2 * Math.PI);
+			ctx.save();
+			ctx.clip();
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.restore();
 		}
-		e.preventDefault();
+		else
+		{
+			ctx.beginPath();
+			ctx.moveTo(this.X, this.Y);
+			ctx.lineCap = 'round';
+			ctx.lineWidth = size;
+			ctx.lineTo(touchobj.pageX-canvasX , touchobj.pageY-canvasY );
+			ctx.strokeStyle = color;
+			ctx.stroke();
+
+			this.X = touchobj.pageX-canvasX;
+			this.Y = touchobj.pageY-canvasY;
+		}
+	}
+	e.preventDefault();
 }, 0);
 
 canvas.addEventListener('touchend', function() {
@@ -215,6 +249,14 @@ document.onkeydown = function(e) {
 	{
 		e.preventDefault();
 		clearScreen();
+	}
+	else if (e.ctrlKey && e.key === '-')
+	{
+		e.preventDefault();
+	}
+	else if (e.ctrlKey && e.key === '+')
+	{
+		e.preventDefault();
 	}
 }
 
@@ -238,6 +280,9 @@ c.oninput=function(event)
 
 function fillBucket()
 {
+	if(eyedrop===1)
+		eyeDrop();
+
 	if(filling===0)
 	{
 		filling=1;
@@ -274,7 +319,7 @@ function fillBucketHelper(currpos,image,clickedcolor,w,h,colorArray)
 		let bottombound = 4*w*h;
 		let crow = rows[Math.floor(currpos/(w*4))];
 		let leftbound = crow[0];
-		let rightbound = crow[1];
+		let rightbound = crow[1]-1;
 
 		if(currpos + 4 <= rightbound && clickedcolor == pixelConvert(image,currpos+4))
 			s.push(currpos+4);
@@ -284,7 +329,7 @@ function fillBucketHelper(currpos,image,clickedcolor,w,h,colorArray)
 			s.push(currpos+(w*4));
 		if(currpos - (w*4) <= bottombound && clickedcolor == pixelConvert(image,currpos-(w*4)))
 			s.push(currpos-(w*4));		
-	}
+		}
 }
 
 function colorChange(newCol)
@@ -364,4 +409,21 @@ function addLayer()
 {
 	let newcanv=document.createElement("canvas");
 	body.appendChild(newcanv);
+}
+
+function eyeDrop()
+{
+	if(filling===1)
+		fillBucket();
+
+	if(eyedrop===0)
+	{
+		eyedrop=1;
+		document.getElementById("eyedropper").style.backgroundColor="red";
+	}
+	else
+	{
+		eyedrop=0;
+		document.getElementById("eyedropper").style.backgroundColor="#4CAF50";
+	}
 }
